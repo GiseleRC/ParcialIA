@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//Clase madre
 public class SteeringAgent : MonoBehaviour
 {
     protected Vector3 _velocity;
