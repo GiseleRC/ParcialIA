@@ -2,18 +2,17 @@ using UnityEngine;
 
 public class SteeringAgentClass4 : MonoBehaviour
 {
-    //[SerializeField] Transform _seekTarget, _fleeTarget;
     [SerializeField] protected float _maxSpeed, _maxForce;
     [SerializeField] protected float _viewRadius;
     [SerializeField] protected LayerMask _obstacles;
 
     protected Vector3 _velocity;
 
-    protected void Move()
-    {
-        transform.position += _velocity * Time.deltaTime;
-        if (_velocity != Vector3.zero) transform.right = _velocity;
-    }
+    //protected void Move()
+    //{
+    //    transform.position += _velocity * Time.deltaTime;
+    //    if (_velocity != Vector3.zero) transform.right = _velocity;
+    //}
 
     protected bool HastToUseObstacleAvoidance()
     {

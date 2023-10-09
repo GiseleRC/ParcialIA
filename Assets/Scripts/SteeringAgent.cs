@@ -1,36 +1,57 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Clase madre
 public class SteeringAgent : MonoBehaviour
 {
-    //[SerializeField] Transform _seekTarget, _fleeTarget;
-    [SerializeField] protected float _maxSpeed, _maxForce;
-    [SerializeField] protected float _viewRadius;
-    [SerializeField] protected LayerMask _obstacles;
-
     protected Vector3 _velocity;
 
-    protected void Move()
+    [SerializeField] protected float _maxSpeed, _maxForce, _multiplyDir;
+    [SerializeField] protected float _viewRadius;
+    [SerializeField] protected LayerMask _obstaclesMask;
+
+    protected void Movement()
     {
         transform.position += _velocity * Time.deltaTime;
-        if (_velocity != Vector3.zero) transform.right = _velocity;
+        if (_velocity != Vector3.zero)
+        {
+            transform.right = _velocity;
+        }
     }
 
-    protected bool HastToUseObstacleAvoidance()
+    //Metodo para evadir los obstaculos
+    protected Vector3 Avoidance()
     {
-        Vector3 avoidanceObs = ObstacleAvoidance();
-        AddForce(avoidanceObs);
-        return avoidanceObs != Vector3.zero;
+        if (Physics.Raycast(transform.position + transform.up * _multiplyDir, transform.right, _viewRadius, _obstaclesMask))
+        {
+            return Seek(transform.position - transform.up);
+        }
+        else if (Physics.Raycast(transform.position - transform.up * _multiplyDir, transform.right, _viewRadius, _obstaclesMask))
+        {
+            return Seek(transform.position + transform.up);
+        }
+
+        return Vector3.zero;
     }
 
-    protected Vector3 Seek(Vector3 targetPos)
+    //Metodo para evaluar si usar avoidance
+    protected bool UseAvoidance()
     {
-        return Seek(targetPos, _maxSpeed);
+        Vector3 avoidanceDir = Avoidance();
+        AddForce(avoidanceDir);
+        return avoidanceDir != Vector3.zero;
     }
 
-    protected Vector3 Seek(Vector3 targetPos, float speed)
+    //Metodo para realizar la busqueda de la recompensa, recibiendo un vector director, devolviendo un vector y velocidad maxima del agente, utilizado para el metodo avoidance y el flee para huir
+    protected Vector3 Seek(Vector3 rewardDir)
     {
-        Vector3 desired = (targetPos - transform.position).normalized * speed;
+        return Seek(rewardDir, _maxSpeed);
+    }
+
+    //Sobrecarga del metodo SEEK, pero este ademas de recibir un vector, recibe una velocidad devolviendo una vector que utilizará la otra sobrecarga de seek
+    protected Vector3 Seek(Vector3 rewardDir, float speed)
+    {
+        Vector3 desired = (rewardDir - transform.position).normalized * speed;
 
         Vector3 steering = desired - _velocity;
 
@@ -39,26 +60,19 @@ public class SteeringAgent : MonoBehaviour
         return steering;
     }
 
-    protected Vector3 Flee(Vector3 targetPos) => -Seek(targetPos);
-  
-    protected Vector3 Arrive(Vector3 targetPos)
-    {
-        float dist = Vector3.Distance(transform.position, targetPos);
-        if (dist > _viewRadius) return Seek(targetPos);
+    //Para huir utiliza el mismo vector que para ir a buscar la reocmpensa pero en el sentido contrario para huir
+    protected Vector3 Flee(Vector3 rewardDir) => -Seek(rewardDir);
 
-        return Seek(targetPos, _maxSpeed * (dist / _viewRadius));
+    //recibe el vector director de la recompensa, calculamos la distancia qu ehay entre nunestro transform y la reward
+    protected Vector3 Arrive(Vector3 rewardDir)
+    {
+        float distanceOfReward = Vector3.Distance(transform.position, rewardDir);
+        if (distanceOfReward > _viewRadius) return Seek(rewardDir);
+
+        return Seek(rewardDir, _maxSpeed * (distanceOfReward / _viewRadius));
     }
 
-    protected Vector3 ObstacleAvoidance()
-    {
-
-        if (Physics.Raycast(transform.position + transform.up * 0.5f, transform.right, _viewRadius, _obstacles))
-            return Seek(transform.position - transform.up);
-        else if (Physics.Raycast(transform.position - transform.up * 0.5f, transform.right, _viewRadius, _obstacles))
-            return Seek(transform.position + transform.up);
-        return Vector3.zero;
-    }
-
+    //recibe el vector director de la recompensa, calculamos la distancia qu ehay entre nunestro transform y la reward
     protected Vector3 Pursuit(SteeringAgent targetAgent)
     {
         Vector3 futurePos = targetAgent.transform.position + targetAgent._velocity;
@@ -71,7 +85,7 @@ public class SteeringAgent : MonoBehaviour
         return -Pursuit(targetAgent);
     }
 
-    public void ResetPosition()
+    public void ResetPos()
     {
         transform.position = Vector3.zero;
     }
