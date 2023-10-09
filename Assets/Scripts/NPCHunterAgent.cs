@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class NPCHunter : SteeringAgent
+public class NPCHunterAgent : SteeringAgent
 {
     [SerializeField] SteeringAgent _targetBoidAgent;
     [SerializeField] float _distanceToHunt;

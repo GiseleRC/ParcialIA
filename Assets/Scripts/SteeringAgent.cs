@@ -87,6 +87,7 @@ public class SteeringAgent : MonoBehaviour
         return -Pursuit(targetAgent);
     }
 
+    //Controla la distancia de separacion entre agentes en la escena
     protected Vector3 Separation(List<SteeringAgent> agentsInScene)
     {
         Vector3 desiredDir = Vector3.zero;
@@ -95,11 +96,11 @@ public class SteeringAgent : MonoBehaviour
         {
             if (agent == this) continue;
 
-            Vector3 distanceInAgents = agent.transform.position - transform.position;
+            Vector3 distanceBtAgents = agent.transform.position - transform.position;
 
-            if (distanceInAgents.sqrMagnitude > _viewRadius * _viewRadius) continue;
+            if (distanceBtAgents.sqrMagnitude > _viewRadius * _viewRadius) continue;
 
-            desiredDir += distanceInAgents;
+            desiredDir += distanceBtAgents;
         }
 
         if (desiredDir == Vector3.zero) return Vector3.zero;
@@ -108,29 +109,29 @@ public class SteeringAgent : MonoBehaviour
         return Vector3.ClampMagnitude((desiredDir.normalized * _maxSpeed) - _velocity, _maxForce * Time.deltaTime);
     }
 
-    protected Vector3 Cohesion(List<SteeringAgent> agents)
+    //Controla  el comportamiento en colmena
+    protected Vector3 Cohesion(List<SteeringAgent> agentsInScene)
     {
-        Vector3 desired = Vector3.zero;
-        int boidsCount = 0;
+        Vector3 desiredDir = Vector3.zero;
+        int agentsInSceneCount = 0;
 
-        foreach (var item in agents)
+        foreach (var agent in agentsInScene)
         {
-            if (item == this) continue; //Ignorar mi propio calculo
+            if (agent == this) continue;
 
-            Vector3 dist = item.transform.position - transform.position;
+            Vector3 distance = agent.transform.position - transform.position;
 
-            if (dist.sqrMagnitude > _viewRadius * _viewRadius) continue;
+            if (distance.sqrMagnitude > _viewRadius * _viewRadius) continue;
 
-            //Promedio = Suma / Cantidad
-            desired += item.transform.position;
-            boidsCount++;
+            desiredDir += agent.transform.position;
+            agentsInSceneCount++;
         }
 
-        if (boidsCount == 0) return Vector3.zero; //Si no hay agentes
+        if (agentsInSceneCount == 0) return Vector3.zero; //Si no hay agentes
 
-        desired /= boidsCount;
+        desiredDir /= agentsInSceneCount;
 
-        return Seek(desired);
+        return Seek(desiredDir);
     }
 
     //formacion y alineamiento de los agentes en escena
@@ -162,6 +163,10 @@ public class SteeringAgent : MonoBehaviour
     {
         transform.position = Vector3.zero;
     }
+
+
+    //NO SE DE QUE SIRVE ESTE METODO
+
 
     //protected virtual void OnDrawGizmos()
     //{
