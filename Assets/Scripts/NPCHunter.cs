@@ -17,7 +17,7 @@ public class NPCHunter : SteeringAgent
     {
         if (Vector3.Distance(transform.position, _targetBoidAgent.transform.position) <= _distanceToHunt)
         {
-             _targetBoidAgent.ResetPos();
+             _targetBoidAgent.ResetVector();
         }
         
     }

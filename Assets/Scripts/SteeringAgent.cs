@@ -10,6 +10,7 @@ public class SteeringAgent : MonoBehaviour
     [SerializeField] protected float _viewRadius;
     [SerializeField] protected LayerMask _obstaclesMask;
 
+    // ------------------------------------------------- Comportamientos del SteeringAgent (boids y hunter) ---------------------------------------------
     protected void Movement()
     {
         transform.position += _velocity * Time.deltaTime;
@@ -34,7 +35,7 @@ public class SteeringAgent : MonoBehaviour
         return Vector3.zero;
     }
 
-    //Metodo para evaluar si usar avoidance
+    //Metodo para evaluar si usar avoidance, realizando un ajuste en la magnitud del vector con el metodo addforce
     protected bool UseAvoidance()
     {
         Vector3 avoidanceDir = Avoidance();
@@ -72,64 +73,40 @@ public class SteeringAgent : MonoBehaviour
         return Seek(rewardDir, _maxSpeed * (distanceOfReward / _viewRadius));
     }
 
-    //recibe el vector director de la recompensa, calculamos la distancia qu ehay entre nunestro transform y la reward
-    protected Vector3 Pursuit(SteeringAgent targetAgent)
+    //recibe un gameobject que posea el script steering agent, para que el npc cazador persiga al boid agent, calculamos la distancia que hay entre entre los agentes,
+    //para devolver unn vector para perseguir y ejecutar el seek hacia la posicion calculada
+    protected Vector3 Pursuit(SteeringAgent targetSteeringAgent)
     {
-        Vector3 futurePos = targetAgent.transform.position + targetAgent._velocity;
-        Debug.DrawLine(transform.position, futurePos, Color.cyan);
-        return Seek(futurePos);
+        Vector3 commingPos = targetSteeringAgent.transform.position + targetSteeringAgent._velocity;
+        Debug.DrawLine(transform.position, commingPos, Color.cyan);
+        return Seek(commingPos);
     }
 
+    //Metodo que va a ser utilizado para evadir al hunter, tomando el metodo pursuit a la inversa para huir
     protected Vector3 Evade(SteeringAgent targetAgent)
     {
         return -Pursuit(targetAgent);
     }
 
-    public void ResetPos()
+    protected Vector3 Separation(List<SteeringAgent> agentsInScene)
     {
-        transform.position = Vector3.zero;
-    }
+        Vector3 desiredDir = Vector3.zero;
 
-    protected Vector3 Alignment(List<SteeringAgent> agents)
-    {
-        Vector3 desired = Vector3.zero;
-        int boidsCount = 0;
-
-        foreach (var item in agents)
+        foreach (var agent in agentsInScene)
         {
-            if (Vector3.Distance(item.transform.position, transform.position) > _viewRadius) continue;
+            if (agent == this) continue;
 
-            //Promedio = Suma / Cantidad
-            //Matematica  = 7, 9, 8
-            //Promedio = 24/3 = 8;
+            Vector3 distanceInAgents = agent.transform.position - transform.position;
 
-            desired += item._velocity;
-            boidsCount++;
+            if (distanceInAgents.sqrMagnitude > _viewRadius * _viewRadius) continue;
+
+            desiredDir += distanceInAgents;
         }
 
-        desired /= boidsCount;
+        if (desiredDir == Vector3.zero) return Vector3.zero;
 
-        return CalculateSteering(desired.normalized * _maxSpeed);
-    }
-
-    protected Vector3 Separation(List<SteeringAgent> agents)
-    {
-        Vector3 desired = Vector3.zero;
-
-        foreach (var item in agents)
-        {
-            if (item == this) continue; //Ignorar mi propio calculo
-
-            Vector3 dist = item.transform.position - transform.position;
-
-            if (dist.sqrMagnitude > _viewRadius * _viewRadius) continue;
-
-            desired += dist;
-        }
-
-        if (desired == Vector3.zero) return Vector3.zero;
-        desired *= -1;
-        return CalculateSteering(desired.normalized * _maxSpeed);
+        desiredDir *= -1;
+        return Vector3.ClampMagnitude((desiredDir.normalized * _maxSpeed) - _velocity, _maxForce * Time.deltaTime);
     }
 
     protected Vector3 Cohesion(List<SteeringAgent> agents)
@@ -157,27 +134,47 @@ public class SteeringAgent : MonoBehaviour
         return Seek(desired);
     }
 
-    protected Vector3 CalculateSteering(Vector3 desired)
+    //formacion y alineamiento de los agentes en escena
+    protected Vector3 AgentsAlignment(List<SteeringAgent> boidsInScene)
     {
-        return Vector3.ClampMagnitude(desired - _velocity, _maxForce * Time.deltaTime);
+        Vector3 desiredDir = Vector3.zero;
+        int boidsInScenecount = 0;
+
+        foreach (var agent in boidsInScene)
+        {
+            if (Vector3.Distance(agent.transform.position, transform.position) > _viewRadius) continue;
+            desiredDir += agent._velocity;
+            boidsInScenecount++;
+        }
+
+        desiredDir /= boidsInScenecount;
+
+        return Vector3.ClampMagnitude(desiredDir - _velocity, _maxForce * Time.deltaTime);
     }
 
-    protected void AddForce(Vector3 force)
+    //ajuste de la magnitud del vector recibido
+    protected void AddForce(Vector3 forceDirValue)
     {
-        _velocity = Vector3.ClampMagnitude(_velocity + force, _maxSpeed);
+        _velocity = Vector3.ClampMagnitude(_velocity + forceDirValue, _maxSpeed);
     }
 
-    protected virtual void OnDrawGizmos()
+    //Metodo para resetear el vector del agent
+    public void ResetVector()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, _viewRadius);
-
-        Gizmos.color = Color.green;
-
-        Vector3 leftRayPos = transform.position + transform.up * 0.5f;
-        Vector3 rightRayPos = transform.position - transform.up * 0.5f;
-
-        Gizmos.DrawLine(leftRayPos, leftRayPos + transform.right * _viewRadius);
-        Gizmos.DrawLine(rightRayPos, rightRayPos + transform.right * _viewRadius);
+        transform.position = Vector3.zero;
     }
+
+    //protected virtual void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawWireSphere(transform.position, _viewRadius);
+
+    //    Gizmos.color = Color.green;
+
+    //    Vector3 leftRayPos = transform.position + transform.up * 0.5f;
+    //    Vector3 rightRayPos = transform.position - transform.up * 0.5f;
+
+    //    Gizmos.DrawLine(leftRayPos, leftRayPos + transform.right * _viewRadius);
+    //    Gizmos.DrawLine(rightRayPos, rightRayPos + transform.right * _viewRadius);
+    //}
 }

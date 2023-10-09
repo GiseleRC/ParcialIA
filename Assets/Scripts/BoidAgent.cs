@@ -40,7 +40,7 @@ public class BoidAgent : SteeringAgent
         var boidsAgents = GameManager.instance.allAgents;
 
         //Al ejecutarse floking, agrego fuerza ejecutando los metodos de steerinAgentBoid, multiplicado la alineacion, checion y separacion 
-        AddForce(Alignment(boidsAgents) * _alignment);
+        AddForce(AgentsAlignment(boidsAgents) * _alignment);
         AddForce(Separation(boidsAgents) * _separation);
         AddForce(Cohesion(boidsAgents) * _cohesion);
     }
