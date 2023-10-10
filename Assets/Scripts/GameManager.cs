@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
         Gizmos.DrawWireCube(transform.position, new Vector3(_boundWidth, _boundHeight));
     }
 
-    public Vector3 AdjustPostionToBounds(Vector3 pos)
+    public Vector3 AdjustPositionToBounds(Vector3 pos)
     {
         //Pasar los limites y dividiendolos
 

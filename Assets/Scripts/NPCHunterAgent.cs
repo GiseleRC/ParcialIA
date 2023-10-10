@@ -5,6 +5,7 @@ public class NPCHunterAgent : SteeringAgent
     [SerializeField] SteeringAgent _targetBoidAgent;
     [SerializeField] float _distanceToHunt;
 
+    //El hunter utiliza UseAvoidanse, addforce, pursuit, movement, hunt
     void Update()
     {
         if (!UseAvoidance()) AddForce(Pursuit(_targetBoidAgent));
@@ -19,6 +20,5 @@ public class NPCHunterAgent : SteeringAgent
         {
              _targetBoidAgent.ResetVector();
         }
-        
     }
 }

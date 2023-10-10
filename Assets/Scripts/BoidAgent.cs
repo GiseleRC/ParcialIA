@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BoidAgent : SteeringAgent
 {
+    //El boid utiliza movement, flockinBoid, UpdatePos, AdjustPositionToBounds
+
     // Rango de valores a lo ancho usados para aplicar floking, le dejamos valores inciales en 1 para que no queden en cero
 
     [SerializeField, Range(0f, 2.5f)] float _alignment = 1f;
@@ -32,7 +34,7 @@ public class BoidAgent : SteeringAgent
 
     private void UpdatePos()
     {
-        transform.position = GameManager.instance.AdjustPostionToBounds(transform.position);
+        transform.position = GameManager.instance.AdjustPositionToBounds(transform.position);
     }
 
     private void FlockingBoid()
