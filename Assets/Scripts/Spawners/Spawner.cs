@@ -31,7 +31,6 @@ public abstract class Spawner : MonoBehaviour
     protected virtual void SpawnInstance()
     {
         SpawnInstance(spawnPoints[spawnPointIdx]);
-        if (++spawnPointIdx >= spawnPoints.Length)
-            spawnPointIdx = 0;
+        if (++spawnPointIdx >= spawnPoints.Length) spawnPointIdx = 0;
     }
 }

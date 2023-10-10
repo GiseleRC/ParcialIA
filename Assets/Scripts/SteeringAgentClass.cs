@@ -22,11 +22,11 @@ public class SteeringAgentClass : MonoBehaviour
     //Metodo para evadir los obstaculos
     protected Vector3 Avoidance()
     {
-        if (Physics.Raycast(transform.position + transform.up * _multiplyDir, transform.right, _viewRadius, _obstaclesMask))
+        if (Physics.Raycast(transform.position + transform.forward * _multiplyDir, transform.right, _viewRadius, _obstaclesMask))
         {
             return Seek(transform.position - transform.up);
         }
-        else if (Physics.Raycast(transform.position - transform.up * _multiplyDir, transform.right, _viewRadius, _obstaclesMask))
+        else if (Physics.Raycast(transform.position - transform.forward * _multiplyDir, transform.right, _viewRadius, _obstaclesMask))
         {
             return Seek(transform.position + transform.up);
         }

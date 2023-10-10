@@ -15,8 +15,8 @@ public class BoidAgent : SteeringAgentClass
     private void Start()
     {
         float xDir = Random.Range(-1f, 1f);
-        float yDir = Random.Range(-1f, 1f);
-        var director = new Vector3(xDir, yDir);
+        float zDir = Random.Range(-1f, 1f);
+        var director = new Vector3(xDir, 0f, zDir);
 
         //velocidad heredada de la clase steeringAgentBoid
         _velocity = director.normalized * _maxSpeed;

@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(transform.position, new Vector3(_boundWidth, _boundHeight));
+        Gizmos.DrawWireCube(transform.position, new Vector3(_boundWidth, 0f, _boundHeight));
     }
 
     public Vector3 AdjustPositionToBounds(Vector3 pos)
@@ -31,8 +31,8 @@ public class GameManager : MonoBehaviour
         float height = _boundHeight / 2;
         float width = _boundWidth / 2;
 
-        if (pos.y > height) pos.y = -height;
-        if (pos.y < -height) pos.y = height;
+        if (pos.z > height) pos.z = -height;
+        if (pos.z < -height) pos.z = height;
 
         if (pos.x > width) pos.x = -width;
         if (pos.x < -width) pos.x = width;
