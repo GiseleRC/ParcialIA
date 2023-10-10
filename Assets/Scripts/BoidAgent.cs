@@ -45,6 +45,8 @@ public class BoidAgent : SteeringAgent
         AddForce(Cohesion(boidsAgents) * _cohesion);
     }
 
+    //NOSE SI SIRVE EJECUTAR ESTE METODO
+
     //protected override void OnDrawGizmos()
     //{
     //    Gizmos.color = Color.green;
