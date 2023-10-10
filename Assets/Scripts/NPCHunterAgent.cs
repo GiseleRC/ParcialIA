@@ -2,23 +2,24 @@ using UnityEngine;
 
 public class NPCHunterAgent : SteeringAgent
 {
-    SteeringAgent _targetBoidAgent = null;
     [SerializeField] float _distanceToHunt;
 
-    //El hunter utiliza UseAvoidanse, addforce, pursuit, movement, hunt
-    void Update()
-    {
-        if (!UseAvoidance()) AddForce(Pursuit(_targetBoidAgent));
-        Move();
+    FiniteStateMachine _fsm;
 
-        Hunt();
+    private void Start()
+    {
+        _fsm = new FiniteStateMachine(); //Esto esta creando una nueva FSM;
+        _fsm.AddState(FiniteStateMachine.NPCHunterAgentStates.Rest, new RestState(this));
+        _fsm.AddState(FiniteStateMachine.NPCHunterAgentStates.Patrol, new PatrolState(this));
+        _fsm.AddState(FiniteStateMachine.NPCHunterAgentStates.Chase, new ChaseState(this));
+
+        _fsm.ChangeState(FiniteStateMachine.NPCHunterAgentStates.Patrol);
     }
 
-    private void Hunt()
+    //El hunter utiliza UseAvoidanse, addforce, pursuit, movement, hunt
+    private void Update()
     {
-        if (Vector3.Distance(transform.position, _targetBoidAgent.transform.position) <= _distanceToHunt)
-        {
-             _targetBoidAgent.ResetVector();
-        }
+        //if (!UseAvoidance()) AddForce(Pursuit(_targetBoidAgent));
+        Move();
     }
 }

@@ -29,16 +29,16 @@ public class BoidAgent : SteeringAgent
 
     void Update()
     {
-        Vector3? nearestRewardPos = null;
+        Reward nearestReward = null;
 
         foreach (Reward reward in GameManager.instance.allRewards)
         {
-            if (!nearestRewardPos.HasValue || (reward.transform.position - transform.position).sqrMagnitude < (nearestRewardPos.Value - transform.position).sqrMagnitude)
-                nearestRewardPos = reward.transform.position;
+            if (!nearestReward || (reward.transform.position - transform.position).sqrMagnitude < (nearestReward.transform.position - transform.position).sqrMagnitude)
+                nearestReward = reward;
         }
 
         //Funciones que se ejecutan continuamente
-        if (!UseAvoidance()) AddForce(Arrive(nearestRewardPos.Value));
+        if (!UseAvoidance()) AddForce(Arrive(nearestReward.transform.position));
         Move();
         FlockingBoid();
         UpdatePos();

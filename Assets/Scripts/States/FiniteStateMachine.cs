@@ -4,36 +4,38 @@ using UnityEngine;
 
 public class FiniteStateMachine 
 {
-    State _currentState;
-    //Diccionario de estados
-    Dictionary<PlayerStates, State> _allStates = new Dictionary<PlayerStates, State>();
-    //Si este codigo quiero que sea generico, no deberia estar llamando a un enum en especifico
+    public enum NPCHunterAgentStates
+    {
+        Rest,
+        Patrol,
+        Chase
+    }
+
+    private State _currentState;
+    private Dictionary<NPCHunterAgentStates, State> _allStates = new Dictionary<NPCHunterAgentStates, State>();
 
     public void Update()
     {
-        //if(_currentState != null) _currentState.OnUpdate(); //Evita llamados nulos
-
-        //Versiones mas recientes
-        _currentState?.OnUpdate(); //Evita llamados nulos
+        _currentState?.OnUpdate();
     }
 
-    public void AddState(PlayerStates name, State state)
+    public void AddState(NPCHunterAgentStates agentState, State state)
     {
-        if (!_allStates.ContainsKey(name))
+        if (!_allStates.ContainsKey(agentState))
         {
-            _allStates.Add(name, state);
+            _allStates.Add(agentState, state);
             state.fsm = this;
         }
         else
         {
-            _allStates[name] = state;
+            _allStates[agentState] = state;
         }
     }
 
-    public void ChangeState(PlayerStates name) //Para ir cambiando de estados, los vamos pidiendo
+    public void ChangeState(NPCHunterAgentStates agentState)
     {
-        _currentState?.OnExit(); //Si o si necesario preguntar por null
-        if (_allStates.ContainsKey(name)) _currentState = _allStates[name];
+        _currentState?.OnExit();
+        if (_allStates.ContainsKey(agentState)) _currentState = _allStates[agentState];
         _currentState?.OnEnter();
     }
 }
