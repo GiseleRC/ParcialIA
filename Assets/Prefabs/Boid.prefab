@@ -110,10 +110,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dac89a79ab893cc41ab1e16a382d0765, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxSpeed: 2
+  _maxSpeed: 5
   _maxForce: 2
-  _multiplyDir: 2
-  _viewRadius: 2
+  _multiplyDir: 0.5
+  _viewRadius: 5
   _obstaclesMask:
     serializedVersion: 2
     m_Bits: 64

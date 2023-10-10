@@ -24,13 +24,12 @@ public class SteeringAgentClass : MonoBehaviour
     {
         if (Physics.Raycast(transform.position + transform.forward * _multiplyDir, transform.right, _viewRadius, _obstaclesMask))
         {
-            return Seek(transform.position - transform.up);
+            return Seek(transform.position - transform.right);
         }
         else if (Physics.Raycast(transform.position - transform.forward * _multiplyDir, transform.right, _viewRadius, _obstaclesMask))
         {
-            return Seek(transform.position + transform.up);
+            return Seek(transform.position + transform.right);
         }
-
         return Vector3.zero;
     }
 
