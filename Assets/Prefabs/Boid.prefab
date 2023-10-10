@@ -111,13 +111,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dac89a79ab893cc41ab1e16a382d0765, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxSpeed: 5
+  _maxSpeed: 4
   _maxForce: 2
   _multiplyDir: 0.5
-  _viewRadius: 5
+  _viewRadius: 4
   _obstaclesMask:
     serializedVersion: 2
     m_Bits: 64
   _alignment: 1
   _separation: 1
-  _cohesion: 1
+  _cohesion: 0

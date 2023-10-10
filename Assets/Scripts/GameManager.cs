@@ -9,7 +9,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] float _boundWidth;
     [SerializeField] float _boundHeight;
 
-    public List<SteeringAgentClass> allAgents = new List<SteeringAgentClass>();
+    public List<SteeringAgent> allAgents = new List<SteeringAgent>();
+    public List<Reward> allRewards = new List<Reward>();
 
     // Start is called before the first frame update
     void Awake()

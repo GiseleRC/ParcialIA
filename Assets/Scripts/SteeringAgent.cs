@@ -1,32 +1,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SteeringAgentClass : MonoBehaviour
+public class SteeringAgent : MonoBehaviour
 {
-    protected Vector3 _velocity;
-
     [SerializeField] protected float _maxSpeed, _maxForce, _multiplyDir;
     [SerializeField] protected float _viewRadius;
     [SerializeField] protected LayerMask _obstaclesMask;
 
+    protected Vector3 _velocity;
+
     // ------------------------------------------------- Comportamientos del SteeringAgent (boids y hunter) ---------------------------------------------
-    protected void Movement()
+    protected void Move()
     {
+        Debug.Log(_velocity.magnitude);
         transform.position += _velocity * Time.deltaTime;
         if (_velocity != Vector3.zero)
         {
-            transform.right = _velocity;
+            transform.forward = _velocity;
         }
     }
 
     //Metodo para evadir los obstaculos
     protected Vector3 Avoidance()
     {
-        if (Physics.Raycast(transform.position + transform.forward * _multiplyDir, transform.right, _viewRadius, _obstaclesMask))
+        if (Physics.Raycast(transform.position + transform.right * _multiplyDir, transform.forward, _viewRadius, _obstaclesMask))
         {
             return Seek(transform.position - transform.right);
         }
-        else if (Physics.Raycast(transform.position - transform.forward * _multiplyDir, transform.right, _viewRadius, _obstaclesMask))
+        else if (Physics.Raycast(transform.position - transform.right * _multiplyDir, transform.forward, _viewRadius, _obstaclesMask))
         {
             return Seek(transform.position + transform.right);
         }
@@ -42,15 +43,15 @@ public class SteeringAgentClass : MonoBehaviour
     }
 
     //Metodo para realizar la busqueda de la recompensa, recibiendo un vector director, devolviendo un vector y velocidad maxima del agente, utilizado para el metodo avoidance y el flee para huir
-    protected Vector3 Seek(Vector3 rewardDir)
+    protected Vector3 Seek(Vector3 targetPos)
     {
-        return Seek(rewardDir, _maxSpeed);
+        return Seek(targetPos, _maxSpeed);
     }
 
     //Sobrecarga del metodo SEEK, pero este ademas de recibir un vector, recibe una velocidad devolviendo una vector que utilizará la otra sobrecarga de seek
-    protected Vector3 Seek(Vector3 rewardDir, float speed)
+    protected Vector3 Seek(Vector3 targetPos, float speed)
     {
-        Vector3 desired = (rewardDir - transform.position).normalized * speed;
+        Vector3 desired = (targetPos - transform.position).normalized * speed;
 
         Vector3 steering = desired - _velocity;
 
@@ -60,20 +61,20 @@ public class SteeringAgentClass : MonoBehaviour
     }
 
     //Para huir utiliza el mismo vector que para ir a buscar la reocmpensa pero en el sentido contrario para huir
-    protected Vector3 Flee(Vector3 rewardDir) => -Seek(rewardDir);
+    protected Vector3 Flee(Vector3 targetPos) => -Seek(targetPos);
 
     //recibe el vector director de la recompensa, calculamos la distancia qu ehay entre nunestro transform y la reward
-    protected Vector3 Arrive(Vector3 rewardDir)
+    protected Vector3 Arrive(Vector3 targetPos)
     {
-        float distanceOfReward = Vector3.Distance(transform.position, rewardDir);
-        if (distanceOfReward > _viewRadius) return Seek(rewardDir);
+        float dist = Vector3.Distance(transform.position, targetPos);
+        if (dist > _viewRadius) return Seek(targetPos);
 
-        return Seek(rewardDir, _maxSpeed * (distanceOfReward / _viewRadius));
+        return Seek(targetPos, _maxSpeed * (dist / _viewRadius));
     }
 
     //recibe un gameobject que posea el script steering agent, para que el npc cazador persiga al boid agent, calculamos la distancia que hay entre entre los agentes,
     //para devolver unn vector para perseguir y ejecutar el seek hacia la posicion calculada
-    protected Vector3 Pursuit(SteeringAgentClass targetSteeringAgent)
+    protected Vector3 Pursuit(SteeringAgent targetSteeringAgent)
     {
         Vector3 commingPos = targetSteeringAgent.transform.position + targetSteeringAgent._velocity;
         Debug.DrawLine(transform.position, commingPos, Color.cyan);
@@ -81,13 +82,13 @@ public class SteeringAgentClass : MonoBehaviour
     }
 
     //Metodo que va a ser utilizado para evadir al hunter, tomando el metodo pursuit a la inversa para huir
-    protected Vector3 Evade(SteeringAgentClass targetAgent)
+    protected Vector3 Evade(SteeringAgent targetAgent)
     {
         return -Pursuit(targetAgent);
     }
 
     //Controla la distancia de separacion entre agentes en la escena
-    protected Vector3 Separation(List<SteeringAgentClass> agentsInScene)
+    protected Vector3 Separation(List<SteeringAgent> agentsInScene)
     {
         Vector3 desiredDir = Vector3.zero;
 
@@ -109,7 +110,7 @@ public class SteeringAgentClass : MonoBehaviour
     }
 
     //Controla  el comportamiento en colmena
-    protected Vector3 Cohesion(List<SteeringAgentClass> agentsInScene)
+    protected Vector3 Cohesion(List<SteeringAgent> agentsInScene)
     {
         Vector3 desiredDir = Vector3.zero;
         int agentsInSceneCount = 0;
@@ -134,7 +135,7 @@ public class SteeringAgentClass : MonoBehaviour
     }
 
     //formacion y alineamiento de los agentes en escena
-    protected Vector3 AgentsAlignment(List<SteeringAgentClass> boidsInScene)
+    protected Vector3 AgentsAlignment(List<SteeringAgent> boidsInScene)
     {
         Vector3 desiredDir = Vector3.zero;
         int boidsInScenecount = 0;
@@ -152,9 +153,9 @@ public class SteeringAgentClass : MonoBehaviour
     }
 
     //ajuste de la magnitud del vector recibido
-    protected void AddForce(Vector3 forceDirValue)
+    protected void AddForce(Vector3 force)
     {
-        _velocity = Vector3.ClampMagnitude(_velocity + forceDirValue, _maxSpeed);
+        _velocity = Vector3.ClampMagnitude(_velocity + force, _maxSpeed);
     }
 
     //Metodo para resetear el vector del agent
@@ -163,21 +164,17 @@ public class SteeringAgentClass : MonoBehaviour
         transform.position = Vector3.zero;
     }
 
+    protected virtual void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, _viewRadius);
 
-    //NO SE DE QUE SIRVE ESTE METODO
+        Gizmos.color = Color.green;
 
+        Vector3 leftRayPos = transform.position + transform.right * _multiplyDir;
+        Vector3 rightRayPos = transform.position - transform.right * _multiplyDir;
 
-    //protected virtual void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.red;
-    //    Gizmos.DrawWireSphere(transform.position, _viewRadius);
-
-    //    Gizmos.color = Color.green;
-
-    //    Vector3 leftRayPos = transform.position + transform.up * 0.5f;
-    //    Vector3 rightRayPos = transform.position - transform.up * 0.5f;
-
-    //    Gizmos.DrawLine(leftRayPos, leftRayPos + transform.right * _viewRadius);
-    //    Gizmos.DrawLine(rightRayPos, rightRayPos + transform.right * _viewRadius);
-    //}
+        Gizmos.DrawLine(leftRayPos, leftRayPos + transform.forward * _viewRadius);
+        Gizmos.DrawLine(rightRayPos, rightRayPos + transform.forward * _viewRadius);
+    }
 }
