@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class NPCHunterAgent : SteeringAgent
+public class NPCHunterAgent : SteeringAgentClass
 {
-    [SerializeField] SteeringAgent _targetBoidAgent;
+    [SerializeField] SteeringAgentClass _targetBoidAgent;
     [SerializeField] float _distanceToHunt;
 
     //El hunter utiliza UseAvoidanse, addforce, pursuit, movement, hunt

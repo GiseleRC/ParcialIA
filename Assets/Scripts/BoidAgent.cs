@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoidAgent : SteeringAgent
+public class BoidAgent : SteeringAgentClass
 {
     //El boid utiliza movement, flockinBoid, UpdatePos, AdjustPositionToBounds
 

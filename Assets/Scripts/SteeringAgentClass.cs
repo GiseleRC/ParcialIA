@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SteeringAgent : MonoBehaviour
+public class SteeringAgentClass : MonoBehaviour
 {
     protected Vector3 _velocity;
 
@@ -74,7 +74,7 @@ public class SteeringAgent : MonoBehaviour
 
     //recibe un gameobject que posea el script steering agent, para que el npc cazador persiga al boid agent, calculamos la distancia que hay entre entre los agentes,
     //para devolver unn vector para perseguir y ejecutar el seek hacia la posicion calculada
-    protected Vector3 Pursuit(SteeringAgent targetSteeringAgent)
+    protected Vector3 Pursuit(SteeringAgentClass targetSteeringAgent)
     {
         Vector3 commingPos = targetSteeringAgent.transform.position + targetSteeringAgent._velocity;
         Debug.DrawLine(transform.position, commingPos, Color.cyan);
@@ -82,13 +82,13 @@ public class SteeringAgent : MonoBehaviour
     }
 
     //Metodo que va a ser utilizado para evadir al hunter, tomando el metodo pursuit a la inversa para huir
-    protected Vector3 Evade(SteeringAgent targetAgent)
+    protected Vector3 Evade(SteeringAgentClass targetAgent)
     {
         return -Pursuit(targetAgent);
     }
 
     //Controla la distancia de separacion entre agentes en la escena
-    protected Vector3 Separation(List<SteeringAgent> agentsInScene)
+    protected Vector3 Separation(List<SteeringAgentClass> agentsInScene)
     {
         Vector3 desiredDir = Vector3.zero;
 
@@ -110,7 +110,7 @@ public class SteeringAgent : MonoBehaviour
     }
 
     //Controla  el comportamiento en colmena
-    protected Vector3 Cohesion(List<SteeringAgent> agentsInScene)
+    protected Vector3 Cohesion(List<SteeringAgentClass> agentsInScene)
     {
         Vector3 desiredDir = Vector3.zero;
         int agentsInSceneCount = 0;
@@ -135,7 +135,7 @@ public class SteeringAgent : MonoBehaviour
     }
 
     //formacion y alineamiento de los agentes en escena
-    protected Vector3 AgentsAlignment(List<SteeringAgent> boidsInScene)
+    protected Vector3 AgentsAlignment(List<SteeringAgentClass> boidsInScene)
     {
         Vector3 desiredDir = Vector3.zero;
         int boidsInScenecount = 0;

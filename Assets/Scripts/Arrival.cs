@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Arrival : SteeringAgent
+public class Arrival : SteeringAgentClass
 {
     [SerializeField] Transform _targetReward;
     void Update()
