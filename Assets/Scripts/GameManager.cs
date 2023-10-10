@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
 
     public List<SteeringAgent> allAgents = new List<SteeringAgent>();
     public List<Reward> allRewards = new List<Reward>();
+    public List<Obstacle> allObstacles = new List<Obstacle>();
 
     // Start is called before the first frame update
     void Awake()
@@ -25,20 +26,18 @@ public class GameManager : MonoBehaviour
         Gizmos.DrawWireCube(transform.position, new Vector3(_boundWidth, 0f, _boundHeight));
     }
 
-    public Vector3 AdjustPositionToBounds(Vector3 pos)
+    public Vector3 AdjustPositionToBounds(Vector3 position)
     {
-        //Pasar los limites y dividiendolos
-
         float height = _boundHeight / 2;
         float width = _boundWidth / 2;
 
-        if (pos.z > height) pos.z = -height;
-        if (pos.z < -height) pos.z = height;
+        if (position.z > height) position.z = -height;
+        if (position.z < -height) position.z = height;
 
-        if (pos.x > width) pos.x = -width;
-        if (pos.x < -width) pos.x = width;
+        if (position.x > width) position.x = -width;
+        if (position.x < -width) position.x = width;
 
-        return pos;
+        return position;
     }
 
 }
