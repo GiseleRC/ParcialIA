@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class BoidAgent : SteeringAgent
 {
-    //El boid utiliza movement, flockinBoid, UpdatePos, AdjustPositionToBounds
-
     // Rango de valores a lo ancho usados para aplicar floking, le dejamos valores inciales en 1 para que no queden en cero
 
     [SerializeField, Range(0f, 2.5f)] protected float _alignment = 1f;
@@ -17,14 +15,13 @@ public class BoidAgent : SteeringAgent
         Vector2 dir = Random.insideUnitCircle;
         var director = new Vector3(dir.x, 0f, dir.y);
 
-        //velocidad heredada de la clase steeringAgentBoid
         _velocity = director.normalized * _maxSpeed;
 
-        GameManager.instance.allAgents.Add(this);
+        GameManager.instance.allBoidsAgents.Add(this);
     }
     private void OnDestroy()
     {
-        GameManager.instance.allAgents.Remove(this);
+        GameManager.instance.allBoidsAgents.Remove(this);
     }
 
     void Update()
@@ -37,7 +34,6 @@ public class BoidAgent : SteeringAgent
                 nearestReward = reward;
         }
 
-        //Funciones que se ejecutan continuamente
         if (!UseAvoidance()) AddForce(Arrive(nearestReward.transform.position));
         Move();
         FlockingBoid();
@@ -51,7 +47,7 @@ public class BoidAgent : SteeringAgent
 
     private void FlockingBoid()
     {
-        var boidsAgents = GameManager.instance.allAgents;
+        var boidsAgents = GameManager.instance.allBoidsAgents;
 
         //Al ejecutarse floking, agrego fuerza ejecutando los metodos de steerinAgentBoid, multiplicado la alineacion, checion y separacion 
         AddForce(AgentsAlignment(boidsAgents) * _alignment);

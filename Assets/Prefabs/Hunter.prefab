@@ -111,12 +111,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60c7a7fcc7230254fbb3c4ba028515b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxSpeed: 0
-  _maxForce: 0
-  _multiplyDir: 0
-  _viewRadius: 0
+  _maxSpeed: 5
+  _maxForce: 10
+  _multiplyDir: 0.5
+  _viewRadius: 4
   _obstaclesMask:
     serializedVersion: 2
     m_Bits: 64
-  _targetBoidAgent: {fileID: 0}
-  _distanceToHunt: 0
+  huntDistance: 10
+  arriveDistance: 1

@@ -2,22 +2,40 @@ using UnityEngine;
 
 public class ChaseState : State
 {
-    private HunterAgent _agent;
-
-    public ChaseState(HunterAgent agent)
+    public ChaseState(HunterAgent agent) : base(agent)
     {
-        _agent = agent;
     }
 
     public override void OnEnter()
     {
+        _renderer.material.color = Color.red;
     }
 
     public override void OnExit()
     {
+        fsm.ChangeState(FiniteStateMachine.HunterAgentStates.Patrol);
     }
 
     public override void OnUpdate()
     {
+        //energyLeft -= energyDrain * Time.deltaTime;
+        //if (energyLeft <= 0f)
+        //{
+        //    fsm.ChangeState(FiniteStateMachine.HunterAgentStates.Rest);
+        //    return;
+        //}
+
+        BoidAgent nearestBoidAgent = null;
+
+        foreach (BoidAgent boidAgent in GameManager.instance.allBoidsAgents)
+        {
+            if (!nearestBoidAgent || (boidAgent.transform.position - _agent.transform.position).sqrMagnitude < (nearestBoidAgent.transform.position - _agent.transform.position).sqrMagnitude)
+                nearestBoidAgent = boidAgent;
+        }
+
+        if (nearestBoidAgent && (nearestBoidAgent.transform.position - _agent.transform.position).magnitude < _agent.huntDistance)
+            _agent.SetPursuitTarget(nearestBoidAgent);
+        else
+            fsm.ChangeState(FiniteStateMachine.HunterAgentStates.Patrol);
     }
 }

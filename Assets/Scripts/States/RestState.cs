@@ -2,15 +2,13 @@ using UnityEngine;
 
 public class RestState : State
 {
-    private HunterAgent _agent;
-
-    public RestState(HunterAgent agent)
+    public RestState(HunterAgent agent) : base(agent)
     {
-        _agent = agent;
     }
 
     public override void OnEnter()
     {
+        _renderer.material.color = Color.green;
     }
 
     public override void OnExit()
