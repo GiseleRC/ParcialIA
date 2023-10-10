@@ -10,8 +10,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] float _boundWidth;
     [SerializeField] float _boundHeight;
 
-    public List<SteeringAgent> allHuntersAgents = new List<SteeringAgent>();
-    public List<SteeringAgent> allBoidsAgents = new List<SteeringAgent>();
+    public List<SteeringAgent> allHunterAgents = new List<SteeringAgent>();
+    public List<SteeringAgent> allBoidAgents = new List<SteeringAgent>();
     public List<Reward> allRewards = new List<Reward>();
     public List<Obstacle> allObstacles = new List<Obstacle>();
     public List<HunterAgentWayPoint> allHunterAgentWayPoints = new List<HunterAgentWayPoint>();

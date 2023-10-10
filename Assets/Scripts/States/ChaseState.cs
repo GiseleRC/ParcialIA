@@ -13,7 +13,6 @@ public class ChaseState : State
 
     public override void OnExit()
     {
-        fsm.ChangeState(FiniteStateMachine.HunterAgentStates.Patrol);
     }
 
     public override void OnUpdate()
@@ -27,7 +26,7 @@ public class ChaseState : State
 
         BoidAgent nearestBoidAgent = null;
 
-        foreach (BoidAgent boidAgent in GameManager.instance.allBoidsAgents)
+        foreach (BoidAgent boidAgent in GameManager.instance.allBoidAgents)
         {
             if (!nearestBoidAgent || (boidAgent.transform.position - _agent.transform.position).sqrMagnitude < (nearestBoidAgent.transform.position - _agent.transform.position).sqrMagnitude)
                 nearestBoidAgent = boidAgent;

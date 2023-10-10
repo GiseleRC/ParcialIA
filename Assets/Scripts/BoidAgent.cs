@@ -17,24 +17,41 @@ public class BoidAgent : SteeringAgent
 
         _velocity = director.normalized * _maxSpeed;
 
-        GameManager.instance.allBoidsAgents.Add(this);
+        GameManager.instance.allBoidAgents.Add(this);
     }
+
     private void OnDestroy()
     {
-        GameManager.instance.allBoidsAgents.Remove(this);
+        GameManager.instance.allBoidAgents.Remove(this);
     }
 
     void Update()
     {
-        Reward nearestReward = null;
+        HunterAgent nearestHunterAgent = null;
 
-        foreach (Reward reward in GameManager.instance.allRewards)
+        foreach (HunterAgent hunterAgent in GameManager.instance.allHunterAgents)
         {
-            if (!nearestReward || (reward.transform.position - transform.position).sqrMagnitude < (nearestReward.transform.position - transform.position).sqrMagnitude)
-                nearestReward = reward;
+            if (!nearestHunterAgent || (hunterAgent.transform.position - transform.position).sqrMagnitude < (nearestHunterAgent.transform.position - transform.position).sqrMagnitude)
+                nearestHunterAgent = hunterAgent;
         }
 
-        if (!UseAvoidance()) AddForce(Arrive(nearestReward.transform.position));
+        if (nearestHunterAgent && (nearestHunterAgent.transform.position - transform.position).magnitude < _viewRadius)
+        {
+            if (!UseAvoidance()) AddForce(Flee(nearestHunterAgent.transform.position));
+        }
+        else
+        {
+            Reward nearestReward = null;
+
+            foreach (Reward reward in GameManager.instance.allRewards)
+            {
+                if (!nearestReward || (reward.transform.position - transform.position).sqrMagnitude < (nearestReward.transform.position - transform.position).sqrMagnitude)
+                    nearestReward = reward;
+            }
+
+            if (!UseAvoidance()) AddForce(Arrive(nearestReward.transform.position));
+        }
+
         Move();
         FlockingBoid();
         UpdatePos();
@@ -47,15 +64,13 @@ public class BoidAgent : SteeringAgent
 
     private void FlockingBoid()
     {
-        var boidsAgents = GameManager.instance.allBoidsAgents;
+        var boidsAgents = GameManager.instance.allBoidAgents;
 
-        //Al ejecutarse floking, agrego fuerza ejecutando los metodos de steerinAgentBoid, multiplicado la alineacion, checion y separacion 
+        //Al ejecutarse floking, agrego fuerza ejecutando los metodos de steerinAgentBoid, multiplicado la alineacion, cohesion y separacion 
         AddForce(AgentsAlignment(boidsAgents) * _alignment);
         AddForce(Separation(boidsAgents) * _separation);
         AddForce(Cohesion(boidsAgents) * _cohesion);
     }
-
-    //NOSE SI SIRVE EJECUTAR ESTE METODO
 
     protected override void OnDrawGizmos()
     {

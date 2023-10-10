@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxSpeed: 5
-  _maxForce: 10
+  _maxForce: 5
   _multiplyDir: 0.5
   _viewRadius: 4
   _obstaclesMask:

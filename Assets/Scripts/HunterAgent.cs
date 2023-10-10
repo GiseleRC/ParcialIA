@@ -12,12 +12,19 @@ public class HunterAgent : SteeringAgent
 
     private void Start()
     {
+        GameManager.instance.allHunterAgents.Add(this);
+
         _fsm = new FiniteStateMachine();
         _fsm.AddState(FiniteStateMachine.HunterAgentStates.Rest, new RestState(this));
         _fsm.AddState(FiniteStateMachine.HunterAgentStates.Patrol, new PatrolState(this));
         _fsm.AddState(FiniteStateMachine.HunterAgentStates.Chase, new ChaseState(this));
 
         _fsm.ChangeState(FiniteStateMachine.HunterAgentStates.Patrol);
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.instance.allHunterAgents.Remove(this);
     }
 
     private void Update()
