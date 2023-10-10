@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HunterAgent : SteeringAgent
 {
@@ -16,10 +17,14 @@ public class HunterAgent : SteeringAgent
     private Transform _arriveTarget = null;
     private SteeringAgent _pursuitTarget = null;
 
-    FiniteStateMachine _fsm;
+    private FiniteStateMachine _fsm;
 
+    protected Slider _energySlider;
+    
     private void Start()
     {
+        _energySlider = FindObjectOfType<Slider>();
+
         currEnergy = maxEnergy;
 
         GameManager.instance.allHunterAgents.Add(this);
@@ -39,6 +44,8 @@ public class HunterAgent : SteeringAgent
 
     private void Update()
     {
+        _energySlider.value = currEnergy / maxEnergy;
+
         _fsm.Update();
 
         if (_arriveTarget)
