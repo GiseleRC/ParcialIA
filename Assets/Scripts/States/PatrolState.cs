@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class PatrolState : State
 {
-    private NPCHunterAgent _agent;
+    private HunterAgent _agent;
 
-    public PatrolState(NPCHunterAgent agent)
+    public PatrolState(HunterAgent agent)
     {
         _agent = agent;
     }

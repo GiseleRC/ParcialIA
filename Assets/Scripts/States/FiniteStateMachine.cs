@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class FiniteStateMachine 
 {
-    public enum NPCHunterAgentStates
+    public enum HunterAgentStates
     {
         Rest,
         Patrol,
@@ -11,14 +11,14 @@ public class FiniteStateMachine
     }
 
     private State _currentState;
-    private Dictionary<NPCHunterAgentStates, State> _allStates = new Dictionary<NPCHunterAgentStates, State>();
+    private Dictionary<HunterAgentStates, State> _allStates = new Dictionary<HunterAgentStates, State>();
 
     public void Update()
     {
         _currentState?.OnUpdate();
     }
 
-    public void AddState(NPCHunterAgentStates agentState, State state)
+    public void AddState(HunterAgentStates agentState, State state)
     {
         if (!_allStates.ContainsKey(agentState))
         {
@@ -31,7 +31,7 @@ public class FiniteStateMachine
         }
     }
 
-    public void ChangeState(NPCHunterAgentStates agentState)
+    public void ChangeState(HunterAgentStates agentState)
     {
         _currentState?.OnExit();
         if (_allStates.ContainsKey(agentState)) _currentState = _allStates[agentState];

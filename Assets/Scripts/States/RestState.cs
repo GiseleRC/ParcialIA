@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class RestState : State
 {
-    private NPCHunterAgent _agent;
+    private HunterAgent _agent;
 
-    public RestState(NPCHunterAgent agent)
+    public RestState(HunterAgent agent)
     {
         _agent = agent;
     }
