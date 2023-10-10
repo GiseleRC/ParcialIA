@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class HunterAgent : SteeringAgent
 {
+    [SerializeField] protected LayerMask _boidAgentsMask;
+
     public float huntDistance;
     public float arriveDistance;
     public float maxEnergy;
@@ -53,6 +55,13 @@ public class HunterAgent : SteeringAgent
         }
 
         Move();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if ((_boidAgentsMask & 1 << other.gameObject.layer) == 0) return;
+
+        other.gameObject.transform.position = GameManager.instance.GetObstacleFreePosition();
     }
 
     public void SetArriveTarget(Transform arriveTarget)

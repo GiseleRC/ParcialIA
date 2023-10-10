@@ -157,12 +157,6 @@ public class SteeringAgent : MonoBehaviour
         _velocity = Vector3.ClampMagnitude(_velocity + force, _maxSpeed);
     }
 
-    //Metodo para resetear el vector del agent
-    public void ResetVector()
-    {
-        transform.position = Vector3.zero;
-    }
-
     protected virtual void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

@@ -2850,7 +2850,7 @@ MonoBehaviour:
   prefab: {fileID: 7540487888443399766, guid: 441099f4d9b179349b6f1f931ee968bf, type: 3}
   parent: {fileID: 1023502214}
   spawnPoints: []
-  count: 1
+  count: 3
 --- !u!1 &1372627292
 GameObject:
   m_ObjectHideFlags: 0
@@ -3094,7 +3094,7 @@ MonoBehaviour:
   - {fileID: 990971065}
   - {fileID: 144909062}
   - {fileID: 1223139744}
-  count: 1
+  count: 6
 --- !u!1001 &1589591441
 PrefabInstance:
   m_ObjectHideFlags: 0

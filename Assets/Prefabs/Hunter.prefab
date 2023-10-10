@@ -118,6 +118,9 @@ MonoBehaviour:
   _obstaclesMask:
     serializedVersion: 2
     m_Bits: 64
+  _boidAgentsMask:
+    serializedVersion: 2
+    m_Bits: 256
   huntDistance: 10
   arriveDistance: 1
   maxEnergy: 100
