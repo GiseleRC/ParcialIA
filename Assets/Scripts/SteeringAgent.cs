@@ -12,7 +12,6 @@ public class SteeringAgent : MonoBehaviour
     // ------------------------------------------------- Comportamientos del SteeringAgent (boids y hunter) ---------------------------------------------
     protected void Move()
     {
-        Debug.Log(_velocity.magnitude);
         transform.position += _velocity * Time.deltaTime;
         if (_velocity != Vector3.zero)
         {

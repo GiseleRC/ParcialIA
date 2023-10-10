@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Spawner : MonoBehaviour
@@ -28,9 +26,21 @@ public abstract class Spawner : MonoBehaviour
         GameObject.Instantiate(prefab, spawnPoint.position, spawnPoint.rotation, parent);
     }
 
+    protected virtual void SpawnInstance(Vector3 position)
+    {
+        GameObject.Instantiate(prefab, position, prefab.transform.rotation, parent);
+    }
+
     protected virtual void SpawnInstance()
     {
-        SpawnInstance(spawnPoints[spawnPointIdx]);
-        if (++spawnPointIdx >= spawnPoints.Length) spawnPointIdx = 0;
+        if (spawnPoints.Length > 0)
+        {
+            SpawnInstance(spawnPoints[spawnPointIdx]);
+            if (++spawnPointIdx >= spawnPoints.Length) spawnPointIdx = 0;
+        }
+        else
+        {
+            SpawnInstance(GameManager.instance.GetObstacleFreePosition());
+        }
     }
 }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3457571896411562706}
   - component: {fileID: 5019025286986361950}
   - component: {fileID: 7212194774936422413}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: NPCHunter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 383279564952932691}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.5
   m_Height: 2
