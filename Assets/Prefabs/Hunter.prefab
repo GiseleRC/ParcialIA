@@ -120,3 +120,8 @@ MonoBehaviour:
     m_Bits: 64
   huntDistance: 10
   arriveDistance: 1
+  maxEnergy: 100
+  energyDrain: 5
+  energyCooldown: 5
+  currEnergy: 0
+  restTime: 0

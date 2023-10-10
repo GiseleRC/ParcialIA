@@ -17,12 +17,12 @@ public class ChaseState : State
 
     public override void OnUpdate()
     {
-        //energyLeft -= energyDrain * Time.deltaTime;
-        //if (energyLeft <= 0f)
-        //{
-        //    fsm.ChangeState(FiniteStateMachine.HunterAgentStates.Rest);
-        //    return;
-        //}
+        _agent.currEnergy-= _agent.energyDrain * Time.deltaTime;
+        if (_agent.currEnergy <= 0f)
+        {
+            fsm.ChangeState(FiniteStateMachine.HunterAgentStates.Rest);
+            return;
+        }
 
         BoidAgent nearestBoidAgent = null;
 

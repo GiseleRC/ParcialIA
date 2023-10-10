@@ -4,6 +4,12 @@ public class HunterAgent : SteeringAgent
 {
     public float huntDistance;
     public float arriveDistance;
+    public float maxEnergy;
+    public float energyDrain;
+    public float energyCooldown;
+
+    public float currEnergy;
+    public float restTime;
 
     private Transform _arriveTarget = null;
     private SteeringAgent _pursuitTarget = null;
@@ -12,6 +18,8 @@ public class HunterAgent : SteeringAgent
 
     private void Start()
     {
+        currEnergy = maxEnergy;
+
         GameManager.instance.allHunterAgents.Add(this);
 
         _fsm = new FiniteStateMachine();
@@ -38,6 +46,10 @@ public class HunterAgent : SteeringAgent
         else if (_pursuitTarget)
         {
             if (!UseAvoidance()) AddForce(Pursuit(_pursuitTarget));
+        }
+        else
+        {
+            if (!UseAvoidance()) AddForce(Seek(transform.position));
         }
 
         Move();
