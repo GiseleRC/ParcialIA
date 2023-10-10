@@ -14,7 +14,7 @@ public class BoidAgent : SteeringAgentClass
 
     private void Start()
     {
-        float xDir = Random.Range(-1f,1f);
+        float xDir = Random.Range(-1f, 1f);
         float yDir = Random.Range(-1f, 1f);
         var director = new Vector3(xDir, yDir);
 
