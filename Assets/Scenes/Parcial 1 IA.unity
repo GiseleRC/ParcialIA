@@ -1887,8 +1887,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01867ad3d29a4804393d9965ba3e5044, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _boundWidth: 0
-  _boundHeight: 0
+  _boundWidth: 62
+  _boundHeight: 46
   allAgents: []
 --- !u!4 &487726284
 Transform:
